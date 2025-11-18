@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  rag-micro:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: rag-micro:prod
+    container_name: rag-micro
+    restart: unless-stopped
+    env_file:
+      - .env
+    expose:
+      - "8000"
+    # Si quieres probar desde el host directamente:
+    ports:
+      - "8100:8000"   # http://TU_IP:8100/health
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sSf http://127.0.0.1:8000/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    networks:
+      - rag_net       # red externa compartida con tus otras apps
+
+networks:
+  rag_net:
+    name: rag_net
+    driver: bridge
