@@ -14,9 +14,7 @@ services:
       - "8100:8000"
     volumes:
       - .:/app
-
     command: uvicorn app:app --host 0.0.0.0 --port 8000 --reload
-
     healthcheck:
       test: ["CMD-SHELL", "curl -sSf http://127.0.0.1:8000/health || exit 1"]
       interval: 30s
@@ -24,3 +22,8 @@ services:
       retries: 5
     networks:
       - rag_net
+
+networks:
+  rag_net:
+    name: rag_net
+    driver: bridge
